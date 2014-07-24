@@ -401,7 +401,7 @@ void ibis::bitvector::compress_secompax() {
     current.it = m_vec.begin();
     last.it = m_vec.begin();
 	beforeLast.it = m_vec.begin();
-	current.decode();
+	//current.decode();
 	int temp;
 	//predeal, merge all fills. supposed to be finished by compress(), so do not need to repeat it.
 /*	for (++ current.it; current.it < m_vec.end(); ++ current.it) {
