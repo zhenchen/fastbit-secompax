@@ -3022,9 +3022,10 @@ void ibis::bitvector::write(int out){
     }
 #endif
     long ierr;
-    const word_t n = sizeof(word_t) * m_vec.size();
-	ierr = UnixWrite(out,(const void*)&n,1);
+    word_t n =  m_vec.size();
+	ierr = UnixWrite(out,(const void*)&n,sizeof(word_t));
 	compress_secompax();
+	n = sizeof(word_t) * m_vec.size();
     ierr = UnixWrite(out, (const void*)m_vec.begin(), n);
     if (ierr != (long) n) {
 	LOGGER(ibis::gVerbose > 0)
@@ -3109,6 +3110,8 @@ void ibis::bitvector::write(int out){
 	}
     }
 #endif
+	word_t vacant = 0x00000000;
+	appendWord(vacant);  //simply aim to add m_vec.size() by 1.
 } // ibis::bitvector::write
 /// Write the bit vector to an array_t<word_t>.  The serialized version
 /// of this bit vector may be passed to another I/O function or sent
