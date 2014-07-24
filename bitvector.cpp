@@ -3023,8 +3023,8 @@ void ibis::bitvector::write(int out){
 #endif
     long ierr;
     const word_t n = sizeof(word_t) * m_vec.size();
-	ierr = UnixWrite(out,(const void*)n,1);
-	//compress_secompax();
+	ierr = UnixWrite(out,(const void*)&n,1);
+	compress_secompax();
     ierr = UnixWrite(out, (const void*)m_vec.begin(), n);
     if (ierr != (long) n) {
 	LOGGER(ibis::gVerbose > 0)
