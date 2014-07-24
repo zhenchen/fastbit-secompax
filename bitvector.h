@@ -123,7 +123,7 @@ public:
     void write(int fdes) ;
     void write(array_t<word_t>& arr) const;
 
-	void decompress_secompax(int begin, int end);
+	void decompress_secompax();
 
     void compress();
 	void compress_secompax();

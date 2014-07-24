@@ -854,7 +854,7 @@ void ibis::bitvector::compress_secompax() {
 
 // Convert stored secompax bitvectors into wah for further treatment. (Wen,July 9 2014)
 
-void ibis::bitvector::decompress_secompax(int begin, int end)
+void ibis::bitvector::decompress_secompax()
 {
 	struct xrun {
 		bool isLiteral;
@@ -913,13 +913,13 @@ void ibis::bitvector::decompress_secompax(int begin, int end)
 	xrun currentTmp;
 	//initialize new bitvector. At last m_vec would be replaced by tmp_vec.
 	
-	word_t wahLength = (end - begin)/4;  // read length of wah.
+	word_t wahLength = *m_vec.begin();  // read length of wah.
 //	int cpxLength = m_vec.size();
 	
 //	std::cout<<"cpxLength"<<cpxLength<<std::endl;
 //	std::cout<<"m_vec.size"<<m_vec.size()<<std::endl;
 	
-	array_t<word_t> tmp_array(wahLength -1 ,0);
+	array_t<word_t> tmp_array(wahLength + 1 ,0);
 
 	bitvector * tmp_vec = new bitvector(tmp_array);
 
@@ -927,7 +927,7 @@ void ibis::bitvector::decompress_secompax(int begin, int end)
 	current.it = m_vec.begin();
 	current.decode();
 
-	for ( current.it; current.it <m_vec.end(); ++ current.it)
+	for ( ++current.it; current.it <m_vec.end(); ++ current.it)
 	{
 		current.decode();
 		std::cout<<"secpxType:"<<current.secpxType<<std::endl;
@@ -3023,6 +3023,8 @@ void ibis::bitvector::write(int out){
 #endif
     long ierr;
     const word_t n = sizeof(word_t) * m_vec.size();
+	ierr = UnixWrite(out,(const void*)n,1);
+	//compress_secompax();
     ierr = UnixWrite(out, (const void*)m_vec.begin(), n);
     if (ierr != (long) n) {
 	LOGGER(ibis::gVerbose > 0)
