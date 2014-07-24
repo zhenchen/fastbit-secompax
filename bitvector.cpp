@@ -842,7 +842,7 @@ void ibis::bitvector::compress_secompax() {
 		}
 	}
 	}
-	if(existLast) last.it++;
+	last.it++;
 	//current.it++;
 
 	if (last.it < m_vec.end()) { // reduce the size of m_vec
