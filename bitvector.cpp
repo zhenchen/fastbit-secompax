@@ -336,14 +336,20 @@ void ibis::bitvector::compress_secompax() {
 			{
 				*it = *it | 0x80000000;
 			}
+			nWords = (*it & MAXCNT);
 		}
-		isDirty0 =( (int)(bool)(*it & SECOMPAX_0_DIRTYMASK1)+(int)(bool)(*it & SECOMPAX_0_DIRTYMASK2)+(int)(bool)(*it & SECOMPAX_0_DIRTYMASK3)+(int)(bool)(*it & SECOMPAX_0_DIRTYMASK4) == 1 );
-		//isDirty1 =( (int)(bool)(*it & SECOMPAX_1_DIRTYMASK1)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK2)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK3)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK4) == 1 );
-		isDirty1 =( (int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK1)+(int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK2)+(int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK3)+(int)(bool)(~(*it) & SECOMPAX_1_DIRTYMASK4) == 1 );
-		dirtyPos0 = ((int)(bool)(*it & SECOMPAX_0_DIRTYMASK4) << 3 )+ ((int)(bool)(*it & SECOMPAX_0_DIRTYMASK3) << 2) + ((int)(bool)(*it & SECOMPAX_0_DIRTYMASK2) << 1 ) + ((int)(bool)(*it & SECOMPAX_0_DIRTYMASK1));   // More efficient
-		//dirtyPos1 = ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK4) << 3 )+ ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK3) << 2) + ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK2) << 1 ) + ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK1));   // More efficient
-		dirtyPos1 = ((int)(bool)(~(*it) & SECOMPAX_1_DIRTYMASK4) << 3 )+ ((int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK3) << 2) + ((int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK2) << 1 ) + ((int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK1));   // More efficient
-		nWords = (*it & MAXCNT);
+		isDirty0 = 0;
+		isDirty1 = 0;
+		if(!isFill)
+		{
+			isDirty0 =( (int)(bool)(*it & SECOMPAX_0_DIRTYMASK1)+(int)(bool)(*it & SECOMPAX_0_DIRTYMASK2)+(int)(bool)(*it & SECOMPAX_0_DIRTYMASK3)+(int)(bool)(*it & SECOMPAX_0_DIRTYMASK4) == 1 );
+			//isDirty1 =( (int)(bool)(*it & SECOMPAX_1_DIRTYMASK1)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK2)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK3)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK4) == 1 );
+			isDirty1 =( (int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK1)+(int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK2)+(int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK3)+(int)(bool)(~(*it) & SECOMPAX_1_DIRTYMASK4) == 1 );
+			dirtyPos0 = ((int)(bool)(*it & SECOMPAX_0_DIRTYMASK4) << 3 )+ ((int)(bool)(*it & SECOMPAX_0_DIRTYMASK3) << 2) + ((int)(bool)(*it & SECOMPAX_0_DIRTYMASK2) << 1 ) + ((int)(bool)(*it & SECOMPAX_0_DIRTYMASK1));   // More efficient
+			//dirtyPos1 = ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK4) << 3 )+ ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK3) << 2) + ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK2) << 1 ) + ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK1));   // More efficient
+			dirtyPos1 = ((int)(bool)(~(*it) & SECOMPAX_1_DIRTYMASK4) << 3 )+ ((int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK3) << 2) + ((int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK2) << 1 ) + ((int)(bool)(~(*it) & SECOMPAX_0_DIRTYMASK1));   // More efficient
+		}
+		
 	}
 	void decode2()
 	{	
@@ -365,6 +371,7 @@ void ibis::bitvector::compress_secompax() {
 		{
 			isFill = 1;
 			fillBit = 0;
+			nWords = (tmp & MAXCNT);
 		}
 		else
 		{
@@ -372,20 +379,24 @@ void ibis::bitvector::compress_secompax() {
 			{
 				isFill = 1;
 				fillBit = 1;
+				nWords = (tmp & MAXCNT);
 			}
 			else
 			{
 				isFill = 0;
 			}
 		}
-		isDirty0 =( (int)(bool)((tmp) & SECOMPAX_0_DIRTYMASK1)+(int)(bool)((tmp) & SECOMPAX_0_DIRTYMASK2)+(int)(bool)((tmp) & SECOMPAX_0_DIRTYMASK3)+(int)(bool)((tmp) & SECOMPAX_0_DIRTYMASK4) == 1 );
-		//isDirty1 =( (int)(bool)(*it & SECOMPAX_1_DIRTYMASK1)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK2)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK3)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK4) == 1 );
-		isDirty1 =( (int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK1)+(int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK2)+(int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK3)+(int)(bool)(~(tmp) & SECOMPAX_1_DIRTYMASK4) == 1 );
-		dirtyPos0 = ((int)(bool)(tmp & SECOMPAX_0_DIRTYMASK4) << 3 )+ ((int)(bool)(tmp & SECOMPAX_0_DIRTYMASK3) << 2) + ((int)(bool)(tmp & SECOMPAX_0_DIRTYMASK2) << 1 ) + ((int)(bool)(tmp & SECOMPAX_0_DIRTYMASK1));   // More efficient
-		//dirtyPos1 = ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK4) << 3 )+ ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK3) << 2) + ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK2) << 1 ) + ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK1));   // More efficient
-		dirtyPos1 = ((int)(bool)(~(tmp) & SECOMPAX_1_DIRTYMASK4) << 3 )+ ((int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK3) << 2) + ((int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK2) << 1 ) + ((int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK1));   // More efficient
-		nWords = (tmp & MAXCNT);
-		
+		isDirty0 = 0;
+		isDirty1 = 0;
+		if(!isFill)
+		{
+			isDirty0 =( (int)(bool)((tmp) & SECOMPAX_0_DIRTYMASK1)+(int)(bool)((tmp) & SECOMPAX_0_DIRTYMASK2)+(int)(bool)((tmp) & SECOMPAX_0_DIRTYMASK3)+(int)(bool)((tmp) & SECOMPAX_0_DIRTYMASK4) == 1 );
+			//isDirty1 =( (int)(bool)(*it & SECOMPAX_1_DIRTYMASK1)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK2)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK3)+(int)(bool)(*it & SECOMPAX_1_DIRTYMASK4) == 1 );
+			isDirty1 =( (int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK1)+(int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK2)+(int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK3)+(int)(bool)(~(tmp) & SECOMPAX_1_DIRTYMASK4) == 1 );
+			dirtyPos0 = ((int)(bool)(tmp & SECOMPAX_0_DIRTYMASK4) << 3 )+ ((int)(bool)(tmp & SECOMPAX_0_DIRTYMASK3) << 2) + ((int)(bool)(tmp & SECOMPAX_0_DIRTYMASK2) << 1 ) + ((int)(bool)(tmp & SECOMPAX_0_DIRTYMASK1));   // More efficient
+			//dirtyPos1 = ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK4) << 3 )+ ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK3) << 2) + ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK2) << 1 ) + ((int)(bool)(*it & SECOMPAX_1_DIRTYMASK1));   // More efficient
+			dirtyPos1 = ((int)(bool)(~(tmp) & SECOMPAX_1_DIRTYMASK4) << 3 )+ ((int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK3) << 2) + ((int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK2) << 1 ) + ((int)(bool)(~(tmp) & SECOMPAX_0_DIRTYMASK1));   // More efficient
+		}
 	}
     };
 
