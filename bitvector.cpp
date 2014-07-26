@@ -882,7 +882,7 @@ void ibis::bitvector::decompress_secompax()
 			dirtyByte1(0), dirtyByte2(0), dirtyBytePos1(0), dirtyBytePos2(0), counter1(0), counter2(0),it(0) {};
 		void decode() {
 			isLiteral = !(bool)(*it >> MAXBITS);       //0:literal;1:fill
-			secpxType = (*it >> MAXBITS - 3) & 0x07;
+			secpxType = (*it >> (MAXBITS - 3)) & 0x07;
 
 			if(!isLiteral)
 			{
@@ -944,43 +944,43 @@ void ibis::bitvector::decompress_secompax()
 		std::cout<<"secpxType:"<<current.secpxType<<std::endl;
 		if(current.isLiteral)
 		{
-			*currentTmp.it = *current.it;
+			*(currentTmp.it) = *current.it;
 			currentTmp.it++;
 		}
 		else
 		{
 			if(current.secpxType == 0) //0-FILL
 			{
-				*currentTmp.it = current.counter1;
-				*currentTmp.it += 0x80000000;
+				*(currentTmp.it) = current.counter1;
+				*(currentTmp.it) += 0x80000000;
 				currentTmp.it++;
 			}
 			else if(current.secpxType == 1) //1-FILL
 			{
-				*currentTmp.it = current.counter1;
-				*currentTmp.it += 0xc0000000;
+				*(currentTmp.it) = current.counter1;
+				*(currentTmp.it) += 0xc0000000;
 				currentTmp.it++;
 			}
 			else if(current.secpxType == 2) //0L1-F-0L2
 			{
 				switch (current.dirtyBytePos1)
 				{
-				case 0: *currentTmp.it = current.dirtyByte1;break;
-				case 1: *currentTmp.it = (current.dirtyByte1 << 8);break;
-				case 2: *currentTmp.it = (current.dirtyByte1 << 16);break;
-				case 3: *currentTmp.it = (current.dirtyByte1 << 24);break;
+				case 0: *(currentTmp.it) = current.dirtyByte1;break;
+				case 1: *(currentTmp.it) = (current.dirtyByte1 << 8);break;
+				case 2: *(currentTmp.it) = (current.dirtyByte1 << 16);break;
+				case 3: *(currentTmp.it) = (current.dirtyByte1 << 24);break;
 				}
 				currentTmp.it ++;
-				*currentTmp.it = current.counter1;
-				if(current.fillType1 == 1) *currentTmp.it += 0x40000000;
-				*currentTmp.it += 0x80000000;
+				*(currentTmp.it) = current.counter1;
+				if(current.fillType1 == 1) *(currentTmp.it) += 0x40000000;
+				*(currentTmp.it) += 0x80000000;
 				currentTmp.it ++;
 				switch(current.dirtyBytePos2)
 				{
-				case 0: *currentTmp.it = current.dirtyByte2;break;
-				case 1: *currentTmp.it = (current.dirtyByte2 << 8);break;
-				case 2: *currentTmp.it = (current.dirtyByte2 << 16);break;
-				case 3: *currentTmp.it = (current.dirtyByte2 << 24);break;
+				case 0: *(currentTmp.it) = current.dirtyByte2;break;
+				case 1: *(currentTmp.it) = (current.dirtyByte2 << 8);break;
+				case 2: *(currentTmp.it) = (current.dirtyByte2 << 16);break;
+				case 3: *(currentTmp.it) = (current.dirtyByte2 << 24);break;
 				}
 				currentTmp.it++;
 			}
@@ -988,24 +988,24 @@ void ibis::bitvector::decompress_secompax()
 			{
 				switch (current.dirtyBytePos1)
 				{
-				case 0: *currentTmp.it = 0x7fffff00 | current.dirtyByte1;break;
-				case 1: *currentTmp.it = 0x7fff00ff | (current.dirtyByte1 << 8);break;
-				case 2: *currentTmp.it = 0x7f00ffff | (current.dirtyByte1 << 16);break;
-				case 3: *currentTmp.it = 0x00ffffff | (current.dirtyByte1 << 24);//if Pos == 3, the maximum of bits of dirtyByte is 7 not 8.
-					*currentTmp.it &= 0x7fffffff;break;		//clear the top bit
+				case 0: *(currentTmp.it) = 0x7fffff00 | current.dirtyByte1;break;
+				case 1: *(currentTmp.it) = 0x7fff00ff | (current.dirtyByte1 << 8);break;
+				case 2: *(currentTmp.it) = 0x7f00ffff | (current.dirtyByte1 << 16);break;
+				case 3: *(currentTmp.it) = 0x00ffffff | (current.dirtyByte1 << 24);//if Pos == 3, the maximum of bits of dirtyByte is 7 not 8.
+					*(currentTmp.it) &= 0x7fffffff;break;		//clear the top bit
 				}
 				currentTmp.it ++;
-				*currentTmp.it = current.counter1;
-				if(current.fillType1 == 1) *currentTmp.it += 0x40000000;
-				*currentTmp.it += 0x80000000;
+				*(currentTmp.it) = current.counter1;
+				if(current.fillType1 == 1) *(currentTmp.it) += 0x40000000;
+				*(currentTmp.it) += 0x80000000;
 				currentTmp.it ++;
 				switch (current.dirtyBytePos2)
 				{
-				case 0: *currentTmp.it = 0x7fffff00 | current.dirtyByte2;break;
-				case 1: *currentTmp.it = 0x7fff00ff | (current.dirtyByte2 << 8);break;
-				case 2: *currentTmp.it = 0x7f00ffff | (current.dirtyByte2 << 16);break;
-				case 3: *currentTmp.it = 0x00ffffff | (current.dirtyByte2 << 24);
-					*currentTmp.it &= 0x7fffffff;break;
+				case 0: *(currentTmp.it) = 0x7fffff00 | current.dirtyByte2;break;
+				case 1: *(currentTmp.it) = 0x7fff00ff | (current.dirtyByte2 << 8);break;
+				case 2: *(currentTmp.it) = 0x7f00ffff | (current.dirtyByte2 << 16);break;
+				case 3: *(currentTmp.it) = 0x00ffffff | (current.dirtyByte2 << 24);
+					*(currentTmp.it) &= 0x7fffffff;break;
 				}
 				currentTmp.it++;
 			}
@@ -1013,23 +1013,23 @@ void ibis::bitvector::decompress_secompax()
 			{
 				switch (current.dirtyBytePos1)
 				{
-				case 0: *currentTmp.it = current.dirtyByte1;break;
-				case 1: *currentTmp.it = (current.dirtyByte1 << 8);break;
-				case 2: *currentTmp.it = (current.dirtyByte1 << 16);break;
-				case 3: *currentTmp.it = (current.dirtyByte1 << 24);break;
+				case 0: *(currentTmp.it) = current.dirtyByte1;break;
+				case 1: *(currentTmp.it) = (current.dirtyByte1 << 8);break;
+				case 2: *(currentTmp.it) = (current.dirtyByte1 << 16);break;
+				case 3: *(currentTmp.it) = (current.dirtyByte1 << 24);break;
 				}
 				currentTmp.it ++;
-				*currentTmp.it = current.counter1;
-				if(current.fillType1 == 1) *currentTmp.it += 0x40000000;
-				*currentTmp.it += 0x80000000;
+				*(currentTmp.it) = current.counter1;
+				if(current.fillType1 == 1) *(currentTmp.it) += 0x40000000;
+				*(currentTmp.it) += 0x80000000;
 				currentTmp.it ++;
 				switch (current.dirtyBytePos2)
 				{
-				case 0: *currentTmp.it = 0x7fffff00 | current.dirtyByte2;break;
-				case 1: *currentTmp.it = 0x7fff00ff | (current.dirtyByte2 << 8);break;
-				case 2: *currentTmp.it = 0x7f00ffff | (current.dirtyByte2 << 16);break;
-				case 3: *currentTmp.it = 0x00ffffff | (current.dirtyByte2 << 24);
-					*currentTmp.it &= 0x7fffffff;break;
+				case 0: *(currentTmp.it) = 0x7fffff00 | current.dirtyByte2;break;
+				case 1: *(currentTmp.it) = 0x7fff00ff | (current.dirtyByte2 << 8);break;
+				case 2: *(currentTmp.it) = 0x7f00ffff | (current.dirtyByte2 << 16);break;
+				case 3: *(currentTmp.it) = 0x00ffffff | (current.dirtyByte2 << 24);
+					*(currentTmp.it) &= 0x7fffffff;break;
 				}
 				currentTmp.it++;
 			}
@@ -1037,57 +1037,57 @@ void ibis::bitvector::decompress_secompax()
 			{
 				switch (current.dirtyBytePos1)
 				{
-				case 0: *currentTmp.it = 0x7fffff00 | current.dirtyByte1;break;
-				case 1: *currentTmp.it = 0x7fff00ff | (current.dirtyByte1 << 8);break;
-				case 2: *currentTmp.it = 0x7f00ffff | (current.dirtyByte1 << 16);break;
-				case 3: *currentTmp.it = 0x00ffffff | (current.dirtyByte1 << 24);
-					*currentTmp.it &= 0x7fffffff;break;
+				case 0: *(currentTmp.it) = 0x7fffff00 | current.dirtyByte1;break;
+				case 1: *(currentTmp.it) = 0x7fff00ff | (current.dirtyByte1 << 8);break;
+				case 2: *(currentTmp.it) = 0x7f00ffff | (current.dirtyByte1 << 16);break;
+				case 3: *(currentTmp.it) = 0x00ffffff | (current.dirtyByte1 << 24);
+					*(currentTmp.it) &= 0x7fffffff;break;
 				}
 				currentTmp.it ++;
-				*currentTmp.it = current.counter1;
-				if(current.fillType1 == 1) *currentTmp.it += 0x40000000;
-				*currentTmp.it += 0x80000000;
+				*(currentTmp.it) = current.counter1;
+				if(current.fillType1 == 1) *(currentTmp.it) += 0x40000000;
+				*(currentTmp.it) += 0x80000000;
 				currentTmp.it ++;
 				switch(current.dirtyBytePos2)
 				{
-				case 0: *currentTmp.it = current.dirtyByte2;break;
-				case 1: *currentTmp.it = (current.dirtyByte2 << 8);break;
-				case 2: *currentTmp.it = (current.dirtyByte2 << 16);break;
-				case 3: *currentTmp.it = (current.dirtyByte2 << 24);break;
+				case 0: *(currentTmp.it) = current.dirtyByte2;break;
+				case 1: *(currentTmp.it) = (current.dirtyByte2 << 8);break;
+				case 2: *(currentTmp.it) = (current.dirtyByte2 << 16);break;
+				case 3: *(currentTmp.it) = (current.dirtyByte2 << 24);break;
 				}
 				currentTmp.it++;
 			}
 			else //FLF
 			{
-				*currentTmp.it = current.counter1;
-				if(current.fillType1 == 1) *currentTmp.it += 0x40000000;
-				*currentTmp.it += 0x80000000;
+				*(currentTmp.it) = current.counter1;
+				if(current.fillType1 == 1) *(currentTmp.it) += 0x40000000;
+				*(currentTmp.it) += 0x80000000;
 				currentTmp.it ++;
 				if(current.NILiteralType == 0)
 				{
 					switch (current.dirtyBytePos1)
 					{
-					case 0: *currentTmp.it = current.dirtyByte1;break;
-					case 1: *currentTmp.it = (current.dirtyByte1 << 8);break;
-					case 2: *currentTmp.it = (current.dirtyByte1 << 16);break;
-					case 3: *currentTmp.it = (current.dirtyByte1 << 24);break;
+					case 0: *(currentTmp.it) = current.dirtyByte1;break;
+					case 1: *(currentTmp.it) = (current.dirtyByte1 << 8);break;
+					case 2: *(currentTmp.it) = (current.dirtyByte1 << 16);break;
+					case 3: *(currentTmp.it) = (current.dirtyByte1 << 24);break;
 					}
 				}
 				else
 				{
 					switch (current.dirtyBytePos1)
 					{
-					case 0: *currentTmp.it = 0x7fffff00 | current.dirtyByte1;break;
-					case 1: *currentTmp.it = 0x7fff00ff | (current.dirtyByte1 << 8);break;
-					case 2: *currentTmp.it = 0x7f00ffff | (current.dirtyByte1 << 16);break;
-					case 3: *currentTmp.it = 0x00ffffff | (current.dirtyByte1 << 24);
-						*currentTmp.it &= 0x7fffffff;break;
+					case 0: *(currentTmp.it) = 0x7fffff00 | current.dirtyByte1;break;
+					case 1: *(currentTmp.it) = 0x7fff00ff | (current.dirtyByte1 << 8);break;
+					case 2: *(currentTmp.it) = 0x7f00ffff | (current.dirtyByte1 << 16);break;
+					case 3: *(currentTmp.it) = 0x00ffffff | (current.dirtyByte1 << 24);
+						*(currentTmp.it) &= 0x7fffffff;break;
 					}
 				}
 				currentTmp.it++;
-				*currentTmp.it = current.counter2;
-				if(current.fillType2 == 1) *currentTmp.it += 0x40000000;
-				*currentTmp.it += 0x80000000;
+				*(currentTmp.it) = current.counter2;
+				if(current.fillType2 == 1) *(currentTmp.it) += 0x40000000;
+				*(currentTmp.it) += 0x80000000;
 				currentTmp.it ++;
 		//		std::cout<<std::hex<<*(m_vec.begin())<<std::endl;	
 			}
