@@ -9,6 +9,10 @@ SECOMPAX performs better compression ratio and fast encoding speed compared with
 
 If you feel interested in this work, please cite it as follows:
 
-[1] Wen, Yuhao, et al. "SECOMPAX: A bitmap index compression algorithm." Computer Communication and Networks (ICCCN), 2014 23rd International Conference on. IEEE, 2014.
+[1] Yuhao Wen et al. "SECOMPAX: A bitmap index compression algorithm." Computer Communication and Networks (ICCCN), 2014 23rd International Conference on. IEEE, 2014.
 
-please visit URL: http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6911838.
+URL: http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6911838.
+
+[2]	Zhen Chen et al., “A Survey of Bitmap Index Compression Algorithms for Big Data,” Tsinghua Science and Technology, 20(1), pp.100-115, February 2015.
+
+URL: http://ieeexplore.ieee.org/xpls/articleDetails.jsp?arnumber=7040519.
